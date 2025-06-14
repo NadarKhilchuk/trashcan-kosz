@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 50px;
+      background: #f0f0f0;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .nickname-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      max-width: 80%;
+    }
+.block {
+    display: flex;
+    /* flex-wrap: nowrap; */
+}
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .trashcan {
+      width: 100px;
+      height: 100px;
+      background: url('./image/basic-trashcan-full.svg') no-repeat center;
+      background-size: contain;
+      margin-top: 20px;
+      padding-left: 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .falling-char {
+      position: absolute;
+      font-size: 20px;
+      animation: fall 1.2s forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+#nickname {
+    max-width: 94%;
+}
+#password {
+    max-width: 300px;
+}
+    @keyframes fall {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Регистрация</h2>
+    <label for="nickname">Никнейм (макс. 10 символов):</label>
+    <div class="nickname-wrapper">
+      <input type="text" id="nickname" maxlength="999">
+      <div class="trashcan" id="trashcan"></div>
+    </div>
+    <label for="password">Пароль:</label>
+    <input type="password" id="password">
+  </div>
+
+  <script>
+    const nicknameInput = document.getElementById("nickname");
+    const trashcan = document.getElementById("trashcan");
+
+    nicknameInput.addEventListener("input", () => {
+      const maxLen = 30;
+      const val = nicknameInput.value;
+
+      if (val.length > maxLen) {
+        const extra = val.slice(maxLen);
+        nicknameInput.value = val.slice(0, maxLen);
+
+        [...extra].forEach((char, i) => {
+          const span = document.createElement("span");
+          span.className = "falling-char";
+          span.textContent = char;
+
+          const inputRect = nicknameInput.getBoundingClientRect();
+          span.style.left = (inputRect.left + nicknameInput.offsetWidth / 2 - -85 + i * 5) + "px";
+          span.style.top = inputRect.top + window.scrollY + "px";
+
+          document.body.appendChild(span);
+
+          setTimeout(() => span.remove(), 1200);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
